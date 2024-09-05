@@ -40,41 +40,50 @@ function createFrontFace(){
     return randomCard.name;
 }
 
+function createElement(tag, className = "", attributes = {}){
+    const element = document.createElement(tag);
+    if(className){
+        element.classList.add(className);
+    }
+    Object.entries(attributes).forEach(([key, value]) =>{
+        element.setAttribute(key, value);
+    });
+    return element;
+}
+
 function createBoard(){
     for(let i = 0; i < numCards; i++){
         if (i % rowSize === 0) { 
             //Crea fila
-            row = document.createElement("div");
-            row.classList.add("rowDiv");
+            row = createElement("div", "rowDiv");
             container.appendChild(row);
         }
         // Crea carta
-        let card = document.createElement("div");
-        card.classList.add("card");
+        let card = createElement("div", "card");
         row.appendChild(card);
 
         // Crea inner
-        let inner = document.createElement("div");
-        inner.classList.add("inner");
+        let inner = createElement("div", "inner");
         card.appendChild(inner);
         
         // Crea front-face
-        let imgTagFrontFace = document.createElement("img");
-        imgTagFrontFace.classList.add("front-face");
-        imgTagFrontFace.src = createFrontFace();
-        imgTagFrontFace.alt = "Imagen de la carta";
+        let frontFaceAttributes = {
+            src: createFrontFace(),
+            alt: "Imagen de la carta"
+        };
+        let imgTagFrontFace = createElement("img", "front-face", frontFaceAttributes);
         inner.appendChild(imgTagFrontFace);
 
         // Crea back-face
-        let imgTagBackFace = document.createElement("img");
-        imgTagBackFace.classList.add("back-face");
-        imgTagBackFace.src = "imgs/ovni.png";
-        imgTagBackFace.alt = "Imagen trasera";
+        let backFaceAttributes = {
+            src: "imgs/ovni.png",
+            alt: "Imagen trasera"
+        };
+        let imgTagBackFace = createElement("img", "back-face", backFaceAttributes);
         inner.appendChild(imgTagBackFace);
-        
-
     };
 };
+
 createBoard();
 
 let cards = document.querySelectorAll(".card");
