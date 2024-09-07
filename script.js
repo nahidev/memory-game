@@ -18,38 +18,34 @@ let cardsNamesAndAmmounts = [
     {name: 'imgs/tarta.png', ammount: 2}
 ];
 
+//Entry point
+main();
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
 
 function createFrontFace(){
-
-    let position = getRandomInt(numPairs);
-    let randomCard = cardsNamesAndAmmounts[position];
-    let ammount = cardsNamesAndAmmounts[position].ammount;
-
-    while (ammount === 0){
-        position = getRandomInt(numPairs);
-        randomCard = cardsNamesAndAmmounts[position];
-        ammount = cardsNamesAndAmmounts[position].ammount;
-    }
-
-    cardsNamesAndAmmounts[position].ammount -= 1;
-
-    console.log(randomCard);
-    return randomCard.name;
+    const availableCards = cardsNamesAndAmmounts.filter(card => card.ammount > 0);
+    let position = getRandomInt(availableCards.length);
+    let selectedCard = availableCards[position];
+    
+    cardsNamesAndAmmounts.forEach(card => { 
+        if(card.name === selectedCard.name){
+            card.ammount -=1;
+        }
+    });
+    return selectedCard.name;
 }
 
-function createElement(tag, className = "", attributes = {}){
+function createElement(tag, className, attributes = {}){
     const element = document.createElement(tag);
-    if(className){
-        element.classList.add(className);
-    }
+    element.classList.add(className);
     Object.entries(attributes).forEach(([key, value]) =>{
         element.setAttribute(key, value);
     });
     return element;
-}
+};
 
 function createBoard(){
     for(let i = 0; i < numCards; i++){
@@ -83,13 +79,6 @@ function createBoard(){
         inner.appendChild(imgTagBackFace);
     };
 };
-
-createBoard();
-
-let cards = document.querySelectorAll(".card");
-
-congratsMessage.style.display = "none";
-cards.forEach(card => card.addEventListener("click", flipCard));
 
 function flipCard() {
     this.classList.toggle("flipped");
@@ -136,6 +125,7 @@ function lockCards(){
       }, 500);
     }
  }
+
  function flipBack(){
     setTimeout(() => {
        cardOne.classList.remove("flipped");
@@ -165,4 +155,11 @@ function lockCards(){
     congratsMessage.style.display = "none"; 
  
  }
- restartButton.addEventListener("click", resetGame); 
+ 
+ function main(){
+    createBoard();
+    let cards = document.querySelectorAll(".card");
+    congratsMessage.style.display = "none";
+    cards.forEach(card => card.addEventListener("click", flipCard));
+    restartButton.addEventListener("click", resetGame); 
+ }
